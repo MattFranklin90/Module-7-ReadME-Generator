@@ -1,6 +1,5 @@
-const inquirer = require('inquirer');
+const inquirer = require('inquirer').default;
 const fs = require('fs');
-
 
 const questions = [
     {
@@ -46,7 +45,7 @@ const questions = [
     }
 ];
 
-
+// Function to generate the README content
 function generateREADME(answers) {
     return `
 # ${answers.title}
@@ -74,11 +73,16 @@ For more information, contact ${answers.contact}.
     `;
 }
 
+// Use async/await to handle Inquirer prompt correctly
+async function generateReadMeFile() {
+    try {
+        const answers = await inquirer.prompt(questions);
+        const readmeContent = generateREADME(answers);
+        fs.writeFileSync('README.md', readmeContent);
+        console.log('README.md has been generated!');
+    } catch (error) {
+        console.error('Error generating README:', error);
+    }
+}
 
-inquirer.prompt(questions).then((answers) => {
-    const readmeContent = generateREADME(answers);
-
-    
-    fs.writeFileSync('README.md', readmeContent);
-    console.log('README.md has been generated!');
-});
+generateReadMeFile();
